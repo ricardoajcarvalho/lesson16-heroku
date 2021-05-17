@@ -13,7 +13,7 @@ def index():
 
     return render_template("index.html", some_text=some_text, current_year=current_year, cities=cities)
 
-
+#This is the page for about me
 @app.route("/about-me")
 def about():
     return render_template("about.html")
