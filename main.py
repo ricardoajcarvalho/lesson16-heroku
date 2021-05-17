@@ -1,5 +1,5 @@
 import datetime
-from flask import Flask, render_template
+from flask import Flask, render_template, request, make_response
 
 app = Flask(__name__)
 
@@ -13,11 +13,20 @@ def index():
 
     return render_template("index.html", some_text=some_text, current_year=current_year, cities=cities)
 
-#This is the page for about me
-@app.route("/about-me")
+@app.route("/about-me", methods=["GET", "POST"])
 def about():
-    return render_template("about.html")
+    if request.method == "GET":
+        user_name = request.cookies.get("user_name")
+        return render_template("about.html", name=user_name)
+    elif request.method == "POST":
+        contact_name = request.form.get("contact-name")
+        contact_email = request.form.get("contact-email")
+        contact_message = request.form.get("contact-message")
 
+        response = make_response(render_template("success.html", contact_name=contact_name))
+        response.set_cookie("user_name", contact_name)
+
+        return response
 
 if __name__ == '__main__':
     app.run(use_reloader=True)  # if you use the port parameter, delete it before deploying to Heroku
